@@ -17,7 +17,8 @@
 		"react-switch": "^5.0.1",
 		"react-toggle": "^4.1.1",
 		"react-use-gesture": "^7.0.5",
-		"styled-components": "5.0.1"
+		"styled-components": "5.0.1",
+		"react-router-dom": "^5.2.0"
 	},
 	"devDependencies": {
 		"gh-pages": "^2.2.0",

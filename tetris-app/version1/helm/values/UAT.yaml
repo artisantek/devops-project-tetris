@@ -1,0 +1,13 @@
+deployment:
+  replicaCount: 1
+resource:
+  cpu:
+    requests: 0.1
+    limit: 0.3
+  memory:
+    requests: 200Mi
+    limit: 400Mi
+environment:
+  env: UAT
+  url: /uat
+namespace: uat

@@ -1,0 +1,13 @@
+deployment:
+  replicaCount: 2
+resource:
+  cpu:
+    requests: 0.1
+    limit: 0.5
+  memory:
+    requests: 200Mi
+    limit: 500Mi
+environment:
+  env: PROD
+  url: /
+namespace: prod

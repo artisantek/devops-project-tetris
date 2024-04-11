@@ -1,0 +1,13 @@
+deployment:
+  replicaCount: 1
+resource:
+  cpu:
+    requests: 0.1
+    limit: 0.2
+  memory:
+    requests: 200Mi
+    limit: 300Mi
+environment:
+  env: DEV
+  url: /dev
+namespace: dev
