@@ -1,0 +1,49 @@
+- name: Playbook to Install Jenkins
+  hosts: all
+  become: yes
+
+  vars:
+    jenkins_version: "2.387.2"
+    jenkins_war_url: "https://get.jenkins.io/war-stable/{{ jenkins_version }}/jenkins.war"
+    jenkins_repo_key_url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+
+  tasks:
+    - name: Import and add Jenkins repository
+      shell:
+        cmd: |
+          wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+          echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+        executable: /bin/bash
+      args:
+        creates: /etc/apt/sources.list.d/jenkins.list
+
+    - name: Install required packages
+      apt:
+        name:
+          - openjdk-17-jre
+        state: present
+        update_cache: yes
+
+    - name: Install Jenkins latest version
+      apt:
+        name: jenkins
+        state: present
+        update_cache: yes
+
+    - name: Stop any running Jenkins instance
+      service:
+        name: jenkins
+        state: stopped
+      failed_when: false
+
+    - name: Replace Jenkins version
+      get_url:
+        url: "{{ jenkins_war_url }}"
+        dest: "/usr/share/java/jenkins.war"
+        mode: '0644'
+        force: yes
+
+    - name: Start Jenkins
+      service:
+        name: jenkins
+        state: started

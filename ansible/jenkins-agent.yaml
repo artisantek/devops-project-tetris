@@ -1,0 +1,113 @@
+- name: Playbook to Install and Configure Tools for Jenkins Agent
+  hosts: all
+  become: yes
+  vars:
+    user_name: ubuntu  # Change this to the user you want to add to the docker group
+
+  tasks:
+    - name: Update repositories cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+      notify: restart docker
+
+    - name: Add user to Docker group
+      user:
+        name: "{{ user_name }}"
+        groups: docker
+        append: yes
+
+    - name: Check if SonarQube container is already present
+      docker_container_info:
+        name: sonar
+      register: sonar_container_info
+
+    - name: Run SonarQube container
+      docker_container:
+        name: sonar
+        image: sonarqube:lts-community
+        ports:
+          - "9000:9000"
+        state: started
+        restart_policy: always
+      when: not sonar_container_info.exists
+
+    - name: Add Trivy GPG key and repository
+      shell:
+        cmd: |
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/trivy.list
+        executable: /bin/bash
+      args:
+        creates: /etc/apt/sources.list.d/trivy.list
+
+    - name: Install Trivy dependencies
+      apt:
+        name:
+          - wget
+          - apt-transport-https
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Install Trivy
+      apt:
+        name: trivy
+        update_cache: yes
+        state: present
+
+    - name: Install Kubectl
+      get_url:
+        url: "https://dl.k8s.io/release/{{ kubectl_stable_version }}/bin/linux/amd64/kubectl"
+        dest: /tmp/kubectl
+        mode: '0755'
+      vars:
+        kubectl_stable_version: "{{ lookup('url', 'https://dl.k8s.io/release/stable.txt', wantlist=False) | trim }}"
+
+    - name: Move Kubectl to /usr/local/bin
+      command:
+        cmd: mv /tmp/kubectl /usr/local/bin/kubectl
+
+    - name: Install AWS CLI dependencies
+      apt:
+        name: unzip
+        state: present
+
+    - name: Download AWS CLI
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+
+    - name: Unzip AWS CLI
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Install AWS CLI
+      command:
+        cmd: /tmp/aws/install
+        creates: /usr/local/bin/aws
+    
+    - name: Download Helm installation script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        dest: /tmp/get_helm.sh
+        mode: '0700'
+
+    - name: Execute the Helm installation script
+      ansible.builtin.command:
+        cmd: /tmp/get_helm.sh
+      args:
+        creates: /usr/local/bin/helm
+
+  handlers:
+    - name: restart docker
+      ansible.builtin.service:
+        name: docker
+        state: restarted
