@@ -9,10 +9,22 @@
       apt:
         update_cache: yes
 
-    - name: Install Jenkins required packages
+    - name: Import NodeSource GPG key
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+
+    - name: Add NodeSource repository
+      apt_repository:
+        repo: deb https://deb.nodesource.com/node_16.x {{ ansible_distribution_release }} main
+        state: present
+        update_cache: yes
+
+    - name: Install Required packages
       apt:
         name:
           - openjdk-17-jre
+          - nodejs
         state: present
         update_cache: yes
 
