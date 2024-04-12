@@ -50,6 +50,14 @@ resource "aws_security_group" "jenkins_agent_sg" {
     cidr_blocks     = ["0.0.0.0/0"] # Replace with your desired IP range
   }
 
+  # Add additional ingress rule for Sonar Qube
+  ingress {
+    from_port       = 9000
+    to_port         = 9000
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"] # Replace with your desired IP range
+  }
+
   egress {
     from_port       = 0
     to_port         = 0

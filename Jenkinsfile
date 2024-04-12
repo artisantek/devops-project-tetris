@@ -57,7 +57,7 @@ pipeline {
         }
 
         stage('Trivy Scan') {
-            stes {
+            steps {
                 sh "trivy image -f json -o results-${BUILD_NUMBER}.json ${dockerImage}:${dockerTag}"
             }
         }
