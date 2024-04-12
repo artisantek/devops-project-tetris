@@ -91,6 +91,10 @@ resource "aws_instance" "jenkins_agent" {
     aws_security_group.jenkins_agent_sg.id,
   ]
 
+  root_block_device {
+    volume_size = 20 # Specify the size of the root EBS volume in GB
+  }
+
   tags = {
     Name = var.jenkins_agent_name
   }
