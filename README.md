@@ -56,7 +56,10 @@ Jenkins is an open-source automation server that enables developers around the w
 
 ### Accessing Jenkins
 
-Access the Jenkins server using the following URL: http://<jenkins-master-public-ip>:8080
+Access the Jenkins server using the following URL: 
+```
+http://<jenkins-master-public-ip>:8080
+```
 
 ## Jenkins Configuration
 
@@ -98,26 +101,29 @@ SonarQube is a static code analysis tool that helps in identifying bugs, vulnera
 
 #### Configuration Steps:
 
-- Connect to the SonarQube server running in the container at: http://<jenkins-agent-public-ip>:9000
+- Connect to the SonarQube server running in the container at: 
+```
+http://<jenkins-agent-public-ip>:9000
+```
 
 Initial credentials are `admin` for both username and password.
 
-- **Generate Sonar Token**:
+##### Generate Sonar Token**:
 - Navigate to **Administration** > **Security** > **Users**.
 - Update tokens and add this token as a credential in Jenkins.
 
-- **Quality Gate Configuration**:
+##### Quality Gate Configuration**:
 - Go to **Administration** > **Configuration** > **Webhook**.
 - Create a webhook with the URL:
   ```
   http://<jenkins-public-ip>:8080/sonarqube-webhook/
   ```
 
-- **SonarQube Scanner Installation**:
+##### SonarQube Scanner Installation**:
 - Navigate to **Manage Jenkins** > **Global Tool Configuration**.
 - Click on **Add SonarQube Scanner** and select **Install Automatically**.
 
-- **Integrate SonarQube Server**:
+##### Integrate SonarQube Server**:
 - Navigate to **Manage Jenkins** > **Configure System** > **SonarQube Servers**.
 - Click on **add SonarQube** and configure with:
   - Name: `sonar-server`
