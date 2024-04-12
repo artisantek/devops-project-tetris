@@ -35,6 +35,7 @@ resource "aws_instance" "ansible_controller" {
               sudo yum update -y
               sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
               sudo yum install ansible-core -y
+              ansible-galaxy collection install community.docker
               EOF
 
   # Copy local .pem file to .ssh/id_rsa on the EC2 instance
