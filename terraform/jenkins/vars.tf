@@ -4,12 +4,6 @@ variable "region" {
   default     = "ap-south-1" # Replace with your desired Region
 }
 
-variable "vpc_id" {
-  description = "VPC ID where the resources will be created"
-  type        = string
-  default     = "vpc-03b30662738634a27" # Replace with your VPC Name
-}
-
 variable "jenkins_master_ami" {
   description = "AMI for Jenkins Master"
   type        = string

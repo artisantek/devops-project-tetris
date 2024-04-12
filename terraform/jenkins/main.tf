@@ -1,7 +1,11 @@
+data "aws_vpc" "default" {
+  default = true
+}
+
 # Security Group for Jenkins Master
 resource "aws_security_group" "jenkins_master_sg" {
   name = "jenkins-master-sg"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     from_port   = 8080  
@@ -28,7 +32,7 @@ resource "aws_security_group" "jenkins_master_sg" {
 # Security Group for Jenkins Agent
 resource "aws_security_group" "jenkins_agent_sg" {
   name = "jenkins-agent-sg"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     from_port       = 22
