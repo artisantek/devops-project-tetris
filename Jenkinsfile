@@ -9,6 +9,7 @@ pipeline {
         branchName = sh(script: 'echo $BRANCH_NAME | sed "s#/#-#"', returnStdout: true).trim()
         gitCommit = "${GIT_COMMIT[0..6]}"
         dockerTag = "${branchName}-${gitCommit}"
+        snykOrg = "16b28bce-526c-4301-97e1-78d88d5d0448"
     }
     
     agent {label 'docker'}
@@ -51,7 +52,7 @@ pipeline {
 
         stage('Snyk Scan') {
             steps {
-                snykImageScan('$dockerImage', '$dockerTag', 'snykCred')
+                snykImageScan('$dockerImage', '$dockerTag', 'snykCred', '$snykOrg')
             }
         }
 
