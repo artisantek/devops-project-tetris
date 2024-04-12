@@ -10,6 +10,7 @@ pipeline {
         gitCommit = "${GIT_COMMIT[0..6]}"
         dockerTag = "${branchName}-${gitCommit}"
         snykOrg = "16b28bce-526c-4301-97e1-78d88d5d0448"
+        SCANNER_HOME=tool 'sonar-scanner'
     }
     
     agent {label 'docker'}
