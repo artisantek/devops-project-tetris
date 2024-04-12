@@ -60,6 +60,16 @@
         name: trivy
         update_cache: yes
         state: present
+    
+    - name: Download Snyk binary
+      get_url:
+        url: https://static.snyk.io/cli/latest/snyk-linux
+        dest: /tmp/snyk
+        mode: '0755'
+
+    - name: Move Snyk binary to /usr/local/bin
+      ansible.builtin.command:
+        cmd: mv /tmp/snyk /usr/local/bin/snyk
 
     - name: Install Kubectl
       get_url:

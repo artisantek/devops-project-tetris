@@ -19,11 +19,45 @@ pipeline {
             }
         }
 
+        stage("Sonarqube Analysis ") {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    dir('tetris-app/version1') { 
+                        sh '''
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName="$repoName" \
+                        -Dsonar.projectKey="$repoName"
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage("quality gate"){
+           steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonarToken' 
+                }
+            } 
+        }
+
         stage('Docker Build') {
             steps {
                 dir('tetris-app/version1') {
                     dockerImageBuild('$dockerImage', '$dockerTag')
                 }
+            }
+        }
+
+        stage('Snyk Scan') {
+            steps {
+                snykImageScan('$dockerImage', '$dockerTag', 'snykCred')
+            }
+        }
+
+        stage('Trivy Scan') {
+            stes {
+                sh "trivy image -f json -o results-${BUILD_NUMBER}.json ${dockerImage}:${dockerTag}"
             }
         }
 
