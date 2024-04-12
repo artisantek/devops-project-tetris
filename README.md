@@ -121,7 +121,9 @@ Initial credentials are `admin` for both username and password.
 
 ##### SonarQube Scanner Installation:
 - Navigate to **Manage Jenkins** > **Global Tool Configuration**.
-- Click on **Add SonarQube Scanner** and select **Install Automatically**.
+- Click on **Add SonarQube Scanner** and configure with:
+  - Name: `sonar-server`
+  - **Install Automatically**
 
 ##### Integrate SonarQube Server:
 - Navigate to **Manage Jenkins** > **Configure System** > **SonarQube Servers**.
