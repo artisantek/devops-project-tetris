@@ -46,6 +46,30 @@ resource "aws_eks_node_group" "eks_node_group" {
   ]
 }
 
+resource "aws_iam_openid_connect_provider" "eks" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
+}
+
+data "tls_certificate" "eks" {
+  url = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
+}
+
+resource "aws_ec2_tag" "subnet_cluster_tag" {
+  for_each    = toset(data.aws_subnets.public.ids)
+  resource_id = each.value
+  key         = "kubernetes.io/cluster/${aws_eks_cluster.eks_cluster.name}"
+  value       = "shared"
+}
+
+resource "aws_ec2_tag" "subnet_elb_tag" {
+  for_each    = toset(data.aws_subnets.public.ids)
+  resource_id = each.value
+  key         = "kubernetes.io/role/elb"
+  value       = "1"
+}
+
 # IAM role and policy attachments for EKS Cluster
 resource "aws_iam_role" "eks_cluster_role" {
   name = "example-eks-cluster-role"

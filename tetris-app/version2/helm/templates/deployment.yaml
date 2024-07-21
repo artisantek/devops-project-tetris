@@ -26,7 +26,5 @@ spec:
             cpu: {{ .Values.resource.cpu.requests | quote }}
             memory: {{ .Values.resource.memory.requests | quote }}
         env:
-        - name: PUBLIC_URL
-          value: {{ .Values.environment.url | quote }}
         - name: ENV
           value: {{ .Values.environment.env }}

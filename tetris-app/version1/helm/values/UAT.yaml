@@ -2,12 +2,12 @@ deployment:
   replicaCount: 1
 resource:
   cpu:
-    requests: 0.1
-    limit: 0.3
+    requests: 0.5
+    limit: 1
   memory:
-    requests: 200Mi
-    limit: 400Mi
+    requests: 500Mi
+    limit: 2Gi
 environment:
   env: UAT
-  url: /uat
+  path: staging-tetris.artisantek.in
 namespace: uat

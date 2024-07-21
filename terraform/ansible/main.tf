@@ -33,6 +33,7 @@ resource "aws_instance" "ansible_controller" {
   user_data = <<-EOF
               #!/bin/bash
               sudo yum update -y
+              sudo yum install git -y
               sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
               sudo yum install ansible-core -y
               ansible-galaxy collection install community.docker

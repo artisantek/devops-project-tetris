@@ -2,12 +2,12 @@ deployment:
   replicaCount: 2
 resource:
   cpu:
-    requests: 0.1
-    limit: 0.5
+    requests: 0.5
+    limit: 2
   memory:
-    requests: 200Mi
-    limit: 500Mi
+    requests: 500Mi
+    limit: 2Gi
 environment:
   env: PROD
-  url: /
+  path: tetris.artisantek.in
 namespace: prod

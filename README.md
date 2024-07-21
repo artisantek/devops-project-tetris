@@ -84,6 +84,7 @@ Install essential Jenkins plugins:
 
 - **Sonar Scanner**: For SonarQube integration and code quality checks.
 - **Blue Ocean** (Optional): For enhanced CI/CD pipeline visualization.
+- **AWS Credential**: For storing AWS Access Key and Secret Key.
 
 Navigate to **Manage Jenkins** > **Manage Plugins** to install these.
 
@@ -122,7 +123,7 @@ Initial credentials are `admin` for both username and password.
 ##### SonarQube Scanner Installation:
 - Navigate to **Manage Jenkins** > **Global Tool Configuration**.
 - Click on **Add SonarQube Scanner** and configure with:
-  - Name: `sonar-server`
+  - Name: `sonar-scanner`
   - **Install Automatically**
 
 ##### Integrate SonarQube Server:

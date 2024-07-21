@@ -3,12 +3,19 @@ kind: Ingress
 metadata:
   name: {{ .Values.deployment.name }}-ingress
   namespace: {{ .Values.namespace }}
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-port: '{{ .Values.service.clusterIPPort }}'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.acmCertificateARN }}
 spec:
-  ingressClassName: nginx
+  ingressClassName: alb
   rules:
-  - http:
+  - host: {{ .Values.environment.path }}
+    http:
       paths:
-      - path: {{ .Values.environment.url }}
+      - path: /
         pathType: Prefix
         backend:
           service:

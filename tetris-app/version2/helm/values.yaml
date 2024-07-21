@@ -17,6 +17,6 @@ resource:
     limit: 300Mi
 environment:
   env: DEV
-  url: /dev
+  path: tetris.artisantek.in
 namespace: dev
-
+acmCertificateARN: arn:aws:acm:ap-south-1:227219889473:certificate/a83adc9c-27d3-4a95-af4a-3c16ecb22616
