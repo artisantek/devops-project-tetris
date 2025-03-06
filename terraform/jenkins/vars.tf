@@ -7,13 +7,13 @@ variable "region" {
 variable "jenkins_master_ami" {
   description = "AMI for Jenkins Master"
   type        = string
-  default     = "ami-007020fd9c84e18c7" # Replace with your desired AMI
+  default     = "ami-00bb6a80f01f03502" # Replace with your desired AMI
 }
 
 variable "jenkins_agent_ami" {
   description = "AMI for Jenkins Agent"
   type        = string
-  default     = "ami-007020fd9c84e18c7" # Replace with your desired AMI
+  default     = "ami-00bb6a80f01f03502" # Replace with your desired AMI
 }
 
 variable "jenkins_master_instance_type" {
@@ -31,7 +31,7 @@ variable "jenkins_agent_instance_type" {
 variable "key_name" {
   description = "Key pair name for SSH access"
   type        = string
-  default     = "november2023" # Replace with your key pair name
+  default     = "adithya" # Replace with your key pair name
 }
 
 variable "jenkins_master_name" {

@@ -9,5 +9,5 @@ resource:
     limit: 1Gi
 environment:
   env: DEV
-  path: dev-tetris.artisantek.in
+  path: dev-tetris.sskdevops.com
 namespace: dev

@@ -9,22 +9,10 @@
       apt:
         update_cache: yes
 
-    - name: Import NodeSource GPG key
-      apt_key:
-        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-        state: present
-
-    - name: Add NodeSource repository
-      apt_repository:
-        repo: deb https://deb.nodesource.com/node_16.x {{ ansible_distribution_release }} main
-        state: present
-        update_cache: yes
-
     - name: Install Required packages
       apt:
         name:
           - openjdk-17-jre
-          - nodejs
         state: present
         update_cache: yes
 
@@ -80,58 +68,35 @@
         update_cache: yes
         state: present
     
-    - name: Download Snyk binary
-      get_url:
-        url: https://static.snyk.io/cli/latest/snyk-linux
-        dest: /tmp/snyk
-        mode: '0755'
+    - name: Install Snyk
+      shell: curl -fsSL https://static.snyk.io/cli/latest/snyk-linux -o /usr/local/bin/snyk && chmod +x /usr/local/bin/snyk
+      args:
+        creates: /usr/local/bin/snyk
 
-    - name: Move Snyk binary to /usr/local/bin
-      ansible.builtin.command:
-        cmd: mv /tmp/snyk /usr/local/bin/snyk
-
-    - name: Install Kubectl
-      get_url:
-        url: "https://dl.k8s.io/release/{{ kubectl_stable_version }}/bin/linux/amd64/kubectl"
-        dest: /tmp/kubectl
-        mode: '0755'
-      vars:
-        kubectl_stable_version: "{{ lookup('url', 'https://dl.k8s.io/release/stable.txt', wantlist=False) | trim }}"
-
-    - name: Move Kubectl to /usr/local/bin
-      command:
-        cmd: mv /tmp/kubectl /usr/local/bin/kubectl
+    - name: Install kubectl
+      shell: |
+        KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+        curl -fsSL "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl
+        chmod +x /usr/local/bin/kubectl
+      args:
+        creates: /usr/local/bin/kubectl
 
     - name: Install AWS CLI dependencies
       apt:
         name: unzip
         state: present
 
-    - name: Download AWS CLI
-      get_url:
-        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-        dest: /tmp/awscliv2.zip
-
-    - name: Unzip AWS CLI
-      unarchive:
-        src: /tmp/awscliv2.zip
-        dest: /tmp
-        remote_src: yes
-
-    - name: Install AWS CLI
-      command:
-        cmd: /tmp/aws/install
+    - name: Install AWS CLI v2
+      shell: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+        unzip -q /tmp/awscliv2.zip -d /tmp
+        /tmp/aws/install
+        rm -rf /tmp/aws /tmp/awscliv2.zip
+      args:
         creates: /usr/local/bin/aws
     
-    - name: Download Helm installation script
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-        dest: /tmp/get_helm.sh
-        mode: '0700'
-
-    - name: Execute the Helm installation script
-      ansible.builtin.command:
-        cmd: /tmp/get_helm.sh
+    - name: Install Helm
+      shell: curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -
       args:
         creates: /usr/local/bin/helm
 

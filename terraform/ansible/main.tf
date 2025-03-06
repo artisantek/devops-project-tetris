@@ -41,13 +41,13 @@ resource "aws_instance" "ansible_controller" {
 
   # Copy local .pem file to .ssh/id_rsa on the EC2 instance
   provisioner "file" {
-    source      = "./november2023.pem"
+    source      = "./adithya.pem"
     destination = "/home/ec2-user/.ssh/id_rsa"
 
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = file("./november2023.pem")
+      private_key = file("./adithya.pem")
       host        = self.public_ip
     }
   }
@@ -61,7 +61,7 @@ resource "aws_instance" "ansible_controller" {
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = file("./november2023.pem")
+      private_key = file("./adithya.pem")
       host        = self.public_ip
     }
   }

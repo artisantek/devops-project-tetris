@@ -85,6 +85,7 @@ Install essential Jenkins plugins:
 - **Sonar Scanner**: For SonarQube integration and code quality checks.
 - **Blue Ocean** (Optional): For enhanced CI/CD pipeline visualization.
 - **AWS Credential**: For storing AWS Access Key and Secret Key.
+- **Multibranch Scan Webhook Trigger**: For Jenkins Webhook Trigger for Multi Branch Pipeline.
 
 Navigate to **Manage Jenkins** > **Manage Plugins** to install these.
 

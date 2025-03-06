@@ -9,6 +9,8 @@ metadata:
     alb.ingress.kubernetes.io/target-port: '{{ .Values.service.clusterIPPort }}'
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.acmCertificateARN }}
+    alb.ingress.kubernetes.io/group.name: shared-alb
+    alb.ingress.kubernetes.io/group.order: '10'
 spec:
   ingressClassName: alb
   rules:

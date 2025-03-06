@@ -98,4 +98,16 @@ resource "aws_instance" "jenkins_agent" {
   tags = {
     Name = var.jenkins_agent_name
   }
+
+  user_data = <<-EOF
+                #!/bin/bash
+                # Update package lists
+                sudo apt update
+                # Install curl (needed to download NodeSource setup script)
+                sudo apt install -y curl
+                # Download and run the NodeSource setup script for Node.js 18.x
+                curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                # Install Node.js
+                sudo apt install -y nodejs
+              EOF
 }

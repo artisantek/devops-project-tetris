@@ -5,7 +5,7 @@ pipeline {
         gitRepoURL = "${env.GIT_URL}"
         gitBranchName = "${env.BRANCH_NAME}"
         repoName = sh(script: "basename -s .git ${GIT_URL}", returnStdout: true).trim()
-        dockerImage = "227219889473.dkr.ecr.ap-south-1.amazonaws.com/${repoName}"
+        dockerImage = "879381264703.dkr.ecr.ap-south-1.amazonaws.com/${repoName}"
         branchName = sh(script: 'echo $BRANCH_NAME | sed "s#/#-#"', returnStdout: true).trim()
         gitCommit = "${GIT_COMMIT[0..6]}"
         dockerTag = "${branchName}-${gitCommit}"
